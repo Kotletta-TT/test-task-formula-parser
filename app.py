@@ -5,14 +5,20 @@ from urllib import parse
 import math
 
 app = Flask(__name__)
+EXPRESSION_PATH_INDEX = 1
+
 
 @app.route('/')
 def index():
+    answer = None
     if request.args.get('expr'):
-        answer = eval(parse.unquote(request.full_path.split('expr=')[1]))
-        return render_template('index.html', answer=answer)
-    else:
-        return render_template('index.html')
+        answer = get_answer(request.full_path)
+    return render_template('index.html', answer=answer)
+
+
+def get_answer(expression):
+    return eval(parse.unquote(expression.split('expr=')[EXPRESSION_PATH_INDEX]))
+
 
 if __name__ == '__main__':
     app.run()
